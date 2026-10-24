@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if page.title and page.title != site.name %}{{ page.title }} | {% endif %}{{ site.name }}{% if site.description %} | {{ site.description }}{% endif %}</title>
+    <meta name="description" content="{{ site.description | escape }}">
+    <link rel="canonical" href="{{ page.url | absolute_url }}">
+    <link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}">
+    {% feed_meta %}
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <div id="wrapper">
+      <header id="branding" class="site-header" role="banner">
+        <div class="brandbar">
+          <h1 id="site-title"><a href="{{ '/' | relative_url }}">{{ site.name }}</a></h1>
+          <p id="site-description">{{ site.description }}</p>
+        </div>
+        <a class="site-logo" href="{{ '/' | relative_url }}" aria-label="{{ site.name }} home">
+          <img src="{{ '/wp-content/uploads/2010/12/BraisedAnatomyLogo2.jpg' | relative_url }}" alt="{{ site.name }}">
+        </a>
+        <nav id="access" aria-label="Primary navigation">
+          <ul class="menu">
+            <li><a href="{{ '/' | relative_url }}">Home</a></li>
+            <li><a href="{{ '/about.html' | relative_url }}">Welcome!</a></li>
+            <li><a href="{{ '/contact.html' | relative_url }}">Contact</a></li>
+            <li><a href="{{ '/links-new.html' | relative_url }}">Favorite Links</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <main id="main" class="site-main" role="main">
+        <div id="content" class="content-area">
+          {{ content }}
+        </div>
+        {% include sidebar.html %}
+      </main>
+
+      <footer id="colophon" class="site-footer" role="contentinfo">
+        <div id="site-info"><a href="{{ '/' | relative_url }}">{{ site.name }}</a></div>
+        <div id="site-generator">Food therapy</div>
+      </footer>
+    </div>
+    <script>
+      (function () {
+        var calendar = document.querySelector('[data-calendar]');
+        if (!calendar) return;
+        var body = calendar.tBodies[0];
+        if (!body) {
+          body = document.createElement('tbody');
+          calendar.appendChild(body);
+        }
+        body.innerHTML = '';
+        var requestedMonth = calendar.dataset.calendarMonth;
+        var now = requestedMonth ? new Date(requestedMonth + '-01T00:00:00') : new Date();
+        var month = now.getMonth();
+        var year = now.getFullYear();
+        var names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var firstDay = new Date(year, month, 1).getDay();
+        var mondayOffset = (firstDay + 6) % 7;
+        var days = new Date(year, month + 1, 0).getDate();
+        calendar.querySelector('caption').textContent = names[month] + ' ' + year;
+        var postDays = {};
+        (calendar.dataset.calendarPosts || '').trim().split(/\s+/).forEach(function (item) {
+          if (!item) return;
+          var pair = item.split('=');
+          postDays[pair[0]] = pair.slice(1).join('=');
+        });
+        var pad = function (value) { return value < 10 ? '0' + value : String(value); };
+        var row = document.createElement('tr');
+        for (var blank = 0; blank < mondayOffset; blank++) row.appendChild(document.createElement('td'));
+        for (var day = 1; day <= days; day++) {
+          if (row.children.length === 7) { body.appendChild(row); row = document.createElement('tr'); }
+          var cell = document.createElement('td');
+          var postUrl = postDays[year + '-' + pad(month + 1) + '-' + day];
+          if (postUrl) {
+            var link = document.createElement('a');
+            link.href = postUrl;
+            link.textContent = day;
+            cell.appendChild(link);
+          } else {
+            cell.textContent = day;
+          }
+          row.appendChild(cell);
+        }
+        while (row.children.length && row.children.length < 7) row.appendChild(document.createElement('td'));
+        if (row.children.length) body.appendChild(row);
+      }());
+    </script>
+  </body>
+</html>

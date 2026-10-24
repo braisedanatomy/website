@@ -1,0 +1,61 @@
+<aside id="primary" class="widget-area" role="complementary">
+  <ul class="widgets">
+    <li class="widget widget_search">
+      <form role="search" method="get" class="search-form" action="{{ '/' | relative_url }}">
+        <label for="search-input">Search for:</label>
+        <div class="search-row">
+          <input id="search-input" type="search" name="q" value="" aria-label="Search for">
+          <button type="submit">Search</button>
+        </div>
+      </form>
+    </li>
+
+    <li class="widget">
+      <h3 class="widget-title">Recent Posts</h3>
+      <ul>
+        {% for post in site.posts limit:5 %}
+          <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </li>
+
+    <li class="widget">
+      <h3 class="widget-title">Recipes</h3>
+      <label class="screen-reader-text" for="recipe-select">Recipes</label>
+      <select id="recipe-select" onchange="if (this.value) window.location.href = this.value;">
+        <option value="">Select Category</option>
+        {% assign recipe_categories = site.categories | sort %}
+        {% for category in recipe_categories %}
+          {% assign category_slug = category[0] | slugify %}
+          <option value="{{ '/category/' | append: category_slug | append: '/' | relative_url }}">{{ category[0] }}</option>
+        {% endfor %}
+      </select>
+    </li>
+
+    <li class="widget widget_calendar">
+      <table id="wp-calendar" data-calendar data-calendar-month="{{ page.archive_key }}" data-calendar-posts="{% for post in site.posts %}{{ post.date | date: '%Y-%m-%-d' }}={{ post.url | relative_url }} {% endfor %}">
+        <caption></caption>
+        <thead>
+          <tr>
+            <th scope="col">M</th><th scope="col">T</th><th scope="col">W</th><th scope="col">T</th><th scope="col">F</th><th scope="col">S</th><th scope="col">S</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="7">Loading calendar…</td></tr></tbody>
+      </table>
+    </li>
+
+    <li class="widget">
+      <h3 class="widget-title">Yestermonths</h3>
+      <label class="screen-reader-text" for="archive-select">Yestermonths</label>
+      <select id="archive-select" onchange="if (this.value) window.location.href = this.value;">
+        <option value="">Select Month</option>
+        {% for month in site.data.archive_months %}
+          {% assign archive_path = month.key | replace: '-', '/' %}
+          <option value="{{ '/' | append: archive_path | append: '/' | relative_url }}">{{ month.label }}</option>
+        {% endfor %}
+      </select>
+    </li>
+
+    <li class="widget widget-links"><a href="http://foodgawker.com/post/archive/braisedanatomy/">my foodgawker gallery</a></li>
+  </ul>
+</aside>

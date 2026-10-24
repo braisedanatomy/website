@@ -1,0 +1,25 @@
+---
+layout: default
+---
+<div class="category-archive">
+  <header class="archive-header">
+    <h2 class="archive-title">{{ page.title }}</h2>
+    <p class="archive-description">Recipes in {{ page.title }}.</p>
+  </header>
+  {% assign category_posts = site.posts | where_exp: 'post', 'post.categories contains page.category' %}
+  {% for post in category_posts %}
+    <article class="entry post hentry">
+      <header class="entry-header">
+        <h2 class="entry-title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+        <div class="entry-meta">Posted on <a href="{{ post.url | relative_url }}"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%B %-d, %Y' }}</time></a> by <a href="#">{{ post.author | default: 'Ari' }}</a></div>
+      </header>
+      <div class="entry-content">
+        {{ post.content }}
+      </div>
+      <footer class="entry-utility">
+        Posted in
+        {% for category in post.categories %}{% assign category_slug = category | slugify %}<a href="{{ '/category/' | append: category_slug | append: '/' | relative_url }}">{{ category }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}
+      </footer>
+    </article>
+  {% endfor %}
+</div>

@@ -1,0 +1,8 @@
+url: 'https://braisedanatomy.com'
+baseurl: ''
+name: 'Braised Anatomy'
+description: 'Food therapy'
+# Build settings
+plugins:
+  - jekyll-feed
+permalink: pretty

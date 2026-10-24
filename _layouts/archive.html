@@ -1,0 +1,27 @@
+---
+layout: default
+---
+<div class="archive-list">
+  <header class="archive-header">
+    <h2 class="archive-title">Monthly Archives: <em>{{ page.archive_label }}</em></h2>
+  </header>
+  {% for post in site.posts %}
+    {% assign post_month = post.date | date: '%Y-%m' %}
+    {% if post_month == page.archive_key %}
+      <article class="entry post hentry">
+        <header class="entry-header">
+          <h2 class="entry-title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+          <div class="entry-meta">Posted on <a href="{{ post.url | relative_url }}"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%B %-d, %Y' }}</time></a> by <a href="#">{{ post.author | default: 'Ari' }}</a></div>
+        </header>
+        <div class="entry-summary">
+          {{ post.content | strip_html | strip_newlines | truncatewords: 55 }}
+          <a class="more-link" href="{{ post.url | relative_url }}">Continue reading →</a>
+        </div>
+        <footer class="entry-utility">
+          Posted in
+          {% for category in post.categories %}{% assign category_slug = category | slugify %}<a href="{{ '/category/' | append: category_slug | append: '/' | relative_url }}">{{ category }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}
+        </footer>
+      </article>
+    {% endif %}
+  {% endfor %}
+</div>
